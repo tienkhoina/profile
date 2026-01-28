@@ -8,11 +8,14 @@ body {
     background: black;
     color: white;
     overflow-x: hidden;
+
+    /* 👉 THÊM */
+    overflow-y: auto;
+    touch-action: pan-y;
 }
 
 section {
     position: relative;
     min-height: 100vh;
     scroll-margin-top: 90px;
-    /* tránh navbar che */
 }

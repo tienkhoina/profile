@@ -8,13 +8,24 @@ export default function HeroBlock() {
   const [letters, setLetters] = useState([]);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
+  /* Detect mobile */
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const resize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   /* Split name */
   useEffect(() => {
     setLetters(profile.name.split(""));
   }, []);
 
-  /* Mouse parallax */
+  /* Mouse parallax (desktop only) */
   useEffect(() => {
+    if (isMobile) return;
+
     const move = (e) => {
       setMouse({
         x: (e.clientX / window.innerWidth) * 2 - 1,
@@ -23,7 +34,7 @@ export default function HeroBlock() {
     };
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, []);
+  }, [isMobile]);
 
   /* Inject animations */
   useEffect(() => {
@@ -34,22 +45,22 @@ export default function HeroBlock() {
   }, []);
 
   return (
-    <section style={wrapper} id="hero">
+    <section style={wrapper(isMobile)} id="hero">
 
       {/* Glow */}
       <div style={glowLayer(mouse)}>
-        <div style={orb1}></div>
-        <div style={orb2}></div>
+        <div style={orb1(isMobile)}></div>
+        <div style={orb2(isMobile)}></div>
       </div>
 
-      <div style={content(mouse)}>
+      <div style={content(mouse, isMobile)}>
 
         <div style={eyebrow}>
           <span style={dot}></span>
           {profile.domain}
         </div>
 
-        <h1 style={name}>
+        <h1 style={name(isMobile)}>
           {letters.map((l, i) => (
             <span key={i} style={letter(i, mouse)}>
               {l === " " ? "\u00A0" : l}
@@ -57,11 +68,11 @@ export default function HeroBlock() {
           ))}
         </h1>
 
-        <h2 style={role}>{profile.role}</h2>
+        <h2 style={role(isMobile)}>{profile.role}</h2>
 
-        <p style={bio}>{profile.bio}</p>
+        <p style={bio(isMobile)}>{profile.bio}</p>
 
-        <div style={actions}>
+        <div style={actions(isMobile)}>
 
           <a
             href="#research"
@@ -91,23 +102,26 @@ export default function HeroBlock() {
 
 /* ================= LAYOUT ================= */
 
-const wrapper = {
+const wrapper = (isMobile) => ({
   position: "relative",
   width: "100%",
   height: "100vh",
   display: "flex",
   alignItems: "center",
-  paddingLeft: "11vw",
+  paddingLeft: isMobile ? "5vw" : "11vw",
+  paddingRight: isMobile ? "5vw" : "0",
   overflow: "hidden",
   background: "transparent"
-};
+});
 
-const content = (m) => ({
+const content = (m, isMobile) => ({
   maxWidth: 620,
   position: "relative",
   zIndex: 2,
   pointerEvents: "auto",
-  transform: `translate(${m.x * -10}px, ${m.y * -10}px)`,
+  transform: isMobile
+    ? "none"
+    : `translate(${m.x * -10}px, ${m.y * -10}px)`,
   transition: "transform 0.12s ease-out"
 });
 
@@ -121,27 +135,27 @@ const glowLayer = (m) => ({
   transform: `translate(${m.x * 25}px, ${m.y * 25}px)`
 });
 
-const orb1 = {
+const orb1 = (isMobile) => ({
   position: "absolute",
-  width: 520,
-  height: 520,
+  width: isMobile ? 260 : 520,
+  height: isMobile ? 260 : 520,
   background: "radial-gradient(circle, rgba(110,120,255,0.22), transparent 70%)",
   top: -160,
   left: -160,
   filter: "blur(90px)",
   animation: "float 14s ease-in-out infinite"
-};
+});
 
-const orb2 = {
+const orb2 = (isMobile) => ({
   position: "absolute",
-  width: 420,
-  height: 420,
+  width: isMobile ? 220 : 420,
+  height: isMobile ? 220 : 420,
   background: "radial-gradient(circle, rgba(160,100,255,0.18), transparent 70%)",
   bottom: -150,
   right: 120,
   filter: "blur(80px)",
   animation: "float 11s ease-in-out infinite reverse"
-};
+});
 
 /* ================= TEXT ================= */
 
@@ -164,12 +178,12 @@ const dot = {
   boxShadow: "0 0 12px rgba(140,150,255,0.9)"
 };
 
-const name = {
-  fontSize: 92,
+const name = (isMobile) => ({
+  fontSize: isMobile ? 42 : 92,
   fontWeight: 900,
-  lineHeight: 0.95,
+  lineHeight: isMobile ? 1.1 : 0.95,
   margin: 0
-};
+});
 
 const letter = (i, m) => ({
   display: "inline-block",
@@ -184,28 +198,29 @@ const letter = (i, m) => ({
   animation: `fadeUp 0.7s ease-out ${i * 0.05}s both`
 });
 
-const role = {
+const role = (isMobile) => ({
   marginTop: 18,
-  fontSize: 26,
+  fontSize: isMobile ? 18 : 26,
   color: "#dde0ff",
   fontWeight: 400
-};
+});
 
-const bio = {
+const bio = (isMobile) => ({
   marginTop: 26,
-  fontSize: 17,
-  maxWidth: 520,
+  fontSize: isMobile ? 14 : 17,
+  maxWidth: isMobile ? "100%" : 520,
   lineHeight: 1.8,
   color: "#bfc5ff"
-};
+});
 
 /* ================= BUTTON ================= */
 
-const actions = {
+const actions = (isMobile) => ({
   marginTop: 46,
   display: "flex",
-  gap: 24
-};
+  flexDirection: isMobile ? "column" : "row",
+  gap: isMobile ? 14 : 24
+});
 
 const primaryBtn = (h) => ({
   padding: "16px 44px",

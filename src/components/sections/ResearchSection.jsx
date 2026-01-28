@@ -3,7 +3,16 @@ import { useState, useEffect } from "react";
 
 export default function ResearchSection() {
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+    const resize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+    }, []);
+
 
   useEffect(() => {
     setIsVisible(true);
@@ -15,10 +24,12 @@ export default function ResearchSection() {
       {/* Animated Header */}
       <div style={headerWrapper}>
         <div style={titleContainer}>
-          <h2 style={title(isVisible)}>
+          <h2 style={title(isVisible, isMobile)}>
+
+
             <span style={titleIcon}>🔬</span> Research Areas
           </h2>
-          <p style={subtitle}>
+          <p style={subtitle(isMobile)}>
             Interdisciplinary investigations & theoretical frameworks
           </p>
         </div>
@@ -28,7 +39,8 @@ export default function ResearchSection() {
       </div>
 
       {/* Research Cards Grid */}
-      <div style={grid}>
+      <div style={grid(isMobile)}>
+
         {researchAreas.map((item, i) => (
           <ResearchCard
             key={i}
@@ -44,7 +56,9 @@ export default function ResearchSection() {
             onMouseLeave={() => setActiveIndex(-1)}
             delay={i * 100}
             isVisible={isVisible}
+            isMobile={isMobile}
             />
+
 
         ))}
       </div>
@@ -74,21 +88,22 @@ export default function ResearchSection() {
   );
 }
 
-function ResearchCard({ 
-  title, 
-  description, 
-  keywords, 
-    reportLink,
+function ResearchCard({
+  title,
+  description,
+  keywords,
+  reportLink,
   codeLink,
   publications = 0,
-
   index,
   active,
   onMouseEnter,
   onMouseLeave,
   delay,
-  isVisible
-}) {
+  isVisible,
+  isMobile
+}) 
+ {
   return (
     <div 
       style={card(active, isVisible, delay)}
@@ -112,12 +127,13 @@ function ResearchCard({
 
       {/* Card Content */}
       <div style={cardContent}>
-        <h3 style={cardTitle(active)}>
+        <h3 style={cardTitle(active, isMobile)}>
           {title}
           {active && <span style={sparkle}>✨</span>}
         </h3>
         
-        <p style={desc}>{description}</p>
+        <p style={desc(isMobile)}>{description}</p>
+
 
         {/* Keywords with Interactive Effects */}
         <div style={tags}>
@@ -140,7 +156,7 @@ function ResearchCard({
         </div>
 
         {/* Hover Actions */}
-        <div style={actions(active)}>
+        <div style={actions(active, isMobile)}>
           <a
             href={reportLink}
             target="_blank"
@@ -195,8 +211,9 @@ const titleContainer = {
   position: "relative"
 };
 
-const title = (isVisible) => ({
-  fontSize: 56,
+const title = (isVisible, isMobile) => ({
+  fontSize: isMobile ? 32 : 56,
+
   fontWeight: 800,
   margin: 0,
   color: "#ffffff",
@@ -217,15 +234,16 @@ const titleIcon = {
   animation: "bounce 3s infinite"
 };
 
-const subtitle = {
-  fontSize: 18,
+const subtitle = (isMobile) => ({
+  fontSize: isMobile ? 14 : 18,
   color: "#b5b8ff",
   marginTop: 12,
   fontWeight: 300,
   letterSpacing: 0.5,
   maxWidth: 600,
   lineHeight: 1.6
-};
+});
+
 
 const dotsPattern = {
   position: "absolute",
@@ -241,13 +259,16 @@ const dotsPattern = {
   zIndex: -1
 };
 
-const grid = {
+const grid = (isMobile) => ({
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+  gridTemplateColumns: isMobile
+    ? "1fr"
+    : "repeat(auto-fit, minmax(350px, 1fr))",
+
   gap: 40,
   position: "relative",
   zIndex: 2
-};
+});
 
 const card = (active, isVisible, delay) => ({
   padding: 0,
@@ -260,10 +281,16 @@ const card = (active, isVisible, delay) => ({
   position: "relative",
   overflow: "hidden",
   transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-  transform: active ? "translateY(-10px) scale(1.02)" : "translateY(0) scale(1)",
+
   cursor: "pointer",
   opacity: isVisible ? 1 : 0,
-  transform: isVisible ? "translateY(0)" : "translateY(40px)",
+  transform:
+  active
+    ? "translateY(-10px) scale(1.02)"
+    : isVisible
+      ? "translateY(0) scale(1)"
+      : "translateY(40px) scale(1)",
+
   transitionDelay: `${delay}ms`,
   zIndex: active ? 10 : 1,
   boxShadow: active 
@@ -323,8 +350,9 @@ const cardContent = {
   padding: "20px 28px 28px"
 };
 
-const cardTitle = (active) => ({
-  fontSize: 24,
+const cardTitle = (active, isMobile) => ({
+  fontSize: isMobile ? 18 : 24,
+
   fontWeight: 700,
   marginBottom: 16,
   color: active ? "#ffffff" : "#e0e2ff",
@@ -339,14 +367,15 @@ const sparkle = {
   animation: "sparkle 1.5s infinite"
 };
 
-const desc = {
-  fontSize: 15,
+const desc = (isMobile) => ({
+  fontSize: isMobile ? 13 : 15,
   lineHeight: 1.8,
   color: "#c6c9ff",
   marginBottom: 24,
   fontWeight: 300,
   minHeight: 72
-};
+});
+
 
 const tags = {
   display: "flex",
@@ -412,13 +441,15 @@ const progressLabel = {
   letterSpacing: 1
 };
 
-const actions = (active) => ({
+const actions = (active, isMobile) => ({
   display: "flex",
+  flexDirection: isMobile ? "column" : "row",
   gap: 12,
   opacity: active ? 1 : 0,
   transform: active ? "translateY(0)" : "translateY(10px)",
   transition: "all 0.3s ease"
 });
+
 
 const buttonBase = {
   flex: 1,

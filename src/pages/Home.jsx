@@ -9,49 +9,61 @@ import MainScene from "../scenes/MainScene";
 
 export default function Home() {
   return (
-    <>
+    <div className="relative min-h-screen overflow-x-hidden">
+
       {/* 3D BACKGROUND */}
-      <div style={sceneLayer}>
+      <div style={sceneLayer} className="pointer-events-none">
         <MainScene />
       </div>
 
       {/* UI */}
-      <Navbar />
+      <div style={mainStyle}>
 
-      {/* Spacer navbar */}
-      <div style={{ height: 80 }} />
+        <Navbar />
 
-      <main style={mainStyle}>
+        {/* Spacer navbar */}
+        <div style={{ height: 80 }} />
 
-        <section id="home" style={heroSection}>
-          <HeroBlock />
-        </section>
+        <main>
 
-        <section id="research">
-          <ResearchSection />
-        </section>
+          <section id="home" style={heroSection}>
+            <div className="px-4 md:px-0">
+              <HeroBlock />
+            </div>
+          </section>
 
-        <section id="projects">
-          <ProjectsSection />
-        </section>
+          <section id="research">
+            <div className="px-4 md:px-0">
+              <ResearchSection />
+            </div>
+          </section>
 
-        <section id="contact">
-          <ContactSection />
-        </section>
+          <section id="projects">
+            <div className="px-4 md:px-0">
+              <ProjectsSection />
+            </div>
+          </section>
 
-      </main>
-    </>
+          <section id="contact">
+            <div className="px-4 md:px-0">
+              <ContactSection />
+            </div>
+          </section>
+
+        </main>
+
+      </div>
+    </div>
   );
 }
 
-/* ================= STYLE ================= */
+/* ================= STYLE GIỮ NGUYÊN ================= */
 
 const sceneLayer = {
   position: "fixed",
   inset: 0,
   zIndex: 0
 };
-
 
 const mainStyle = {
   position: "relative",
