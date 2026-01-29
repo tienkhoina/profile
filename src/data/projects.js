@@ -2,7 +2,7 @@ export const projects = [
   {
     name: "Evolutionary NAS Framework",
     description:
-      "End-to-end Neural Architecture Search framework that generates, validates, and compiles arbitrary architectures from general computation graphs using evolutionary algorithms and NSGA-II.",
+      "Framework Neural Architecture Search đầu-cuối có khả năng sinh, kiểm tra và biên dịch các kiến trúc bất kỳ từ đồ thị tính toán tổng quát bằng thuật toán tiến hóa và NSGA-II.",
     tech: ["PyTorch", "Python", "Evolutionary Algorithm", "NSGA-II"],
     projectLink: "https://github.com/tienkhoina/NAS"
   },
@@ -10,7 +10,7 @@ export const projects = [
   {
     name: "Truck–Drone VRP Optimization",
     description:
-      "Hybrid metaheuristic solver for multi-objective Truck–Drone Vehicle Routing Problem combining Evolutionary Algorithm, Tabu Search, and exact TSPTW solver.",
+      "Bộ giải metaheuristic lai cho bài toán định tuyến xe tải–drone đa mục tiêu, kết hợp Evolutionary Algorithm, Tabu Search và bộ giải TSPTW chính xác.",
     tech: ["C++", "Python", "OR-Tools", "Optimization"],
     projectLink: "https://github.com/tienkhoina/Truck_drone_optimize"
   },
@@ -18,7 +18,7 @@ export const projects = [
   {
     name: "MIND News Recommendation Model",
     description:
-      "Relation-aware neural news recommendation model with continuous integral attention, implemented in JAX/Flax and evaluated on MIND-large.",
+      "Mô hình gợi ý tin tức dựa trên quan hệ với cơ chế continuous integral attention, triển khai bằng JAX/Flax và đánh giá trên tập dữ liệu MIND-large.",
     tech: ["JAX", "Flax", "Deep Learning", "Recommender Systems"],
     projectLink: "https://github.com/tienkhoina/MIND_jax_model"
   }
