@@ -163,7 +163,7 @@ function ResearchCard({
             rel="noopener noreferrer"
             style={readMoreBtn}
             >
-            Read Paper
+            Read Report
             <span style={arrowIcon}>→</span>
             </a>
 
